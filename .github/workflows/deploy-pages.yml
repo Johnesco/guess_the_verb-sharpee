@@ -1,0 +1,41 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          [ -d web ] && cp -r web/* _site/ || true
+          [ -d lib ] && cp -r lib _site/ || true
+          cp *.html _site/ 2>/dev/null || true
+          cp *.txt _site/ 2>/dev/null || true
+          cp *.ni _site/ 2>/dev/null || true
+          cp *.ink _site/ 2>/dev/null || true
+          cp *.json _site/ 2>/dev/null || true
+          cp *.bas _site/ 2>/dev/null || true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
