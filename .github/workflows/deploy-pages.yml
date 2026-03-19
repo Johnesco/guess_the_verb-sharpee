@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [master, main]
   workflow_dispatch:
 
 permissions:
@@ -34,6 +34,10 @@ jobs:
           cp *.ink _site/ 2>/dev/null || true
           cp *.json _site/ 2>/dev/null || true
           cp *.bas _site/ 2>/dev/null || true
+          cp *.js _site/ 2>/dev/null || true
+          cp *.css _site/ 2>/dev/null || true
+          cp *.ts _site/ 2>/dev/null || true
+          cp *.map _site/ 2>/dev/null || true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
